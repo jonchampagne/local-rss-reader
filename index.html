@@ -85,14 +85,9 @@
 	 			item=new Item();
 	 			item.title=$(this).find("title").text();
 	 			item.link=$(this).find("link").text();
-	 			item.description=$(this).find("description").text();
-
-	 			// A little manipulation to get the date object right
-	 			time=Date.parse($(this).find("pubDate").text());
-	 			date=new Date();
-	 			date.setTime(time);
-	 			item.date=date;
-
+	 			// Parse out any html. Makes it much lighter to load than when sites try and embed html in their feeds
+	 			item.description=$(this).find("description").text().replace(/<(?:.|)*?>/gm, '').replace('\n','<br />');
+	 			item.date=$(this).find("pubDate").text();
 	 			item.guid=$(this).find("guid").text();
 	 			items.push(item);
 	 		});
@@ -118,13 +113,16 @@
 	 		$("#content").append(""+
 	 			"<div class=rssFeed>"+
 	 				"<div class=rssHeader>"+
-	 					"<a href="+item.link+">"+item.title+"</a>"+
+	 					"<a href="+item.link+">"+item.title+"</a>"+"<span class=date>"+item.date+"</span>"+
 	 				"</div>"+
 	 				"<div class=rssBody>"+
 	 					item.description+
 	 				"</div>"+
 	 			"</div>"+
 	 			"");
+
+
+
 	 	}
 
 
